@@ -1,0 +1,784 @@
+<!DOCTYPE html><!-- build:20260623KG -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<title>Readerbull Audit: Beyond the Simulation by Katie Glow</title>
+<style>
+  :root {
+    --teal:     #00B5AD;
+    --teal-l:   #E0F7F6;
+    --teal-d:   #007A75;
+    --orange:   #F47421;
+    --orange-l: #FFF0E6;
+    --orange-d: #C05A10;
+    --navy:     #1B3A48;
+    --mid:      #4A6070;
+    --muted:    #7A909E;
+    --light:    #F5F7F8;
+    --border:   #DDE3E7;
+    --white:    #FFFFFF;
+    --black:    #111111;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; background:#F9FAFB; color:var(--black); line-height:1.6; font-size:13px; }
+
+  .wrap { max-width:1260px; margin:0 auto; padding:40px 32px; }
+  .g2 { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+  .mb { margin-bottom:24px; }
+
+  .sec-label { font-size:14px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:var(--orange); margin:40px 0 16px; display:flex; align-items:center; gap:12px; }
+  .sec-label::after { content:''; flex:1; height:1px; background:var(--border); }
+
+  .card { background:var(--white); border-radius:6px; padding:28px 32px; border:1px solid var(--border); }
+  .card-hdr { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--orange); margin-bottom:18px; padding-bottom:10px; border-bottom:1px solid var(--border); }
+  .card-title { font-size:15px; font-weight:700; color:var(--teal-d); margin-bottom:10px; line-height:1.3; }
+
+  .score-panel { background:var(--navy); border-radius:6px; padding:32px; }
+  .score-eyebrow { font-size:14px; letter-spacing:2.5px; text-transform:uppercase; color:var(--orange); margin-bottom:12px; }
+  .score-num { font-size:80px; font-weight:900; color:var(--teal); line-height:1; }
+  .score-denom { font-size:28px; color:var(--orange); font-weight:300; }
+  .score-range { display:inline-block; margin-top:10px; background:rgba(244,116,33,.18); border:1px solid rgba(244,116,33,.4); color:#fff; padding:4px 16px; border-radius:3px; font-size:11px; font-weight:400; letter-spacing:1px; }
+  .bar-row { margin-top:28px; }
+  .bar-item { margin-bottom:13px; }
+  .bar-item:last-child { margin-bottom:0; }
+  .bar-meta { display:flex; justify-content:space-between; margin-bottom:5px; }
+  .bar-lbl { font-size:12px; color:rgba(255,255,255,.7); }
+  .bar-val { font-size:12px; font-weight:700; color:rgba(255,255,255,.9); }
+  .bar-track { height:6px; background:rgba(255,255,255,.1); border-radius:3px; overflow:hidden; }
+  .bar-fill { height:100%; border-radius:3px; }
+
+  .stat-strip { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:6px; overflow:hidden; margin-top:20px; }
+  .stat-cell { background:var(--white); padding:16px; text-align:center; display:flex; flex-direction:column; align-items:center; }
+  .stat-cell > div:last-child { margin-top:auto; padding-top:6px; }
+  .stat-v { font-size:22px; font-weight:800; color:var(--orange); }
+  .stat-l { font-size:12px; color:var(--mid); margin-top:3px; line-height:1.4; }
+
+  .badge { display:inline-block; padding:3px 9px; border-radius:3px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.4px; }
+  .b-teal   { background:var(--teal-l);   color:var(--teal-d); }
+  .b-orange { background:var(--orange-l); color:var(--orange-d); }
+  .b-navy   { background:rgba(27,58,72,.08); color:var(--navy); }
+  .b-muted  { background:var(--light);    color:var(--muted); }
+
+  .item { display:flex; gap:14px; align-items:flex-start; margin-bottom:20px; }
+  .item:last-child { margin-bottom:0; }
+  .item-icon { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800; flex-shrink:0; margin-top:1px; }
+  .icon-teal   { background:var(--teal-l);   color:var(--teal-d); }
+  .icon-orange { background:var(--orange-l); color:var(--orange-d); }
+  .item-t { font-size:15px; font-weight:700; color:var(--teal-d); margin-bottom:3px; }
+  .item-b { font-size:12px; color:var(--mid); line-height:1.6; }
+
+  .callout { border-left:3px solid var(--teal); background:var(--teal-l); padding:14px 18px; border-radius:0 4px 4px 0; font-size:12px; color:var(--navy); line-height:1.65; }
+  .callout-orange { border-left-color:var(--orange); background:var(--orange-l); }
+  .callout strong { color:var(--black); }
+
+  table { width:100%; border-collapse:collapse; font-size:12px; }
+  th { background:var(--navy); color:rgba(255,255,255,.85); padding:9px 12px; text-align:left; font-weight:600; font-size:10px; letter-spacing:.5px; text-transform:uppercase; }
+  td { padding:9px 12px; border-bottom:1px solid var(--border); color:var(--mid); }
+  tr:last-child td { border-bottom:none; }
+  tr:nth-child(even) td { background:var(--light); }
+  .tc { text-align:center; } .tr { text-align:right; }
+
+  .step { display:flex; gap:16px; align-items:flex-start; padding:18px 20px; border-radius:4px; margin-bottom:10px; }
+  .step:last-child { margin-bottom:0; }
+  .step-teal   { background:var(--teal-l);   border-left:4px solid var(--teal); }
+  .step-orange { background:var(--orange-l); border-left:4px solid var(--orange); }
+  .step-num { width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:12px; flex-shrink:0; color:#fff; }
+  .num-teal   { background:var(--teal); }
+  .num-orange { background:var(--orange); }
+  .step-t { font-size:13px; font-weight:700; color:var(--teal-d); margin-bottom:4px; }
+  .step-b { font-size:12px; color:var(--mid); line-height:1.55; }
+
+  .banner { background:var(--navy); color:#fff; border-radius:6px; padding:24px 32px; margin-bottom:24px; }
+  .banner h3 { font-size:15px; font-weight:700; margin-bottom:6px; color:#fff; }
+  .banner p  { font-size:12px; color:rgba(255,255,255,.7); line-height:1.65; }
+  .banner-stat { display:inline-block; background:var(--teal); border:1px solid var(--teal-d); color:#fff; padding:8px 18px; border-radius:3px; font-size:13px; font-weight:400; margin:8px 6px 0 0; }
+
+  .hb-card { background:var(--white); border:1px solid var(--border); border-top:4px solid var(--teal); border-radius:6px; padding:28px 32px; margin-bottom:24px; }
+  .hb-eyebrow { font-size:18px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--teal-d); margin-bottom:8px; }
+
+  .tip { position:relative; display:inline-flex; align-items:center; gap:5px; }
+  .tip-q { width:14px; height:14px; border-radius:50%; background:rgba(255,255,255,.15); color:rgba(255,255,255,.55); font-size:8px; font-weight:800; display:inline-flex; align-items:center; justify-content:center; cursor:default; flex-shrink:0; }
+  .tip-box { display:none; position:absolute; left:0; bottom:calc(100% + 8px); background:#fff; color:#1B3A48; font-size:11px; line-height:1.55; padding:9px 12px; border-radius:4px; width:210px; box-shadow:0 4px 20px rgba(0,0,0,.25); z-index:100; pointer-events:none; }
+  .tip-box::after { content:''; position:absolute; top:100%; left:8px; border:5px solid transparent; border-top-color:#fff; }
+  .tip:hover .tip-box { display:block; }
+
+  .ftr { background:var(--navy); color:rgba(255,255,255,.35); text-align:center; padding:22px; font-size:11px; }
+
+  .mob-bar { display:none; position:fixed; top:0; left:0; right:0; height:80px; background:var(--navy); z-index:500; align-items:center; justify-content:space-between; padding:0 16px; border-bottom:1px solid rgba(255,255,255,.08); }
+  .mob-logo img { height:77px; width:auto; display:block; }
+  .mob-hamburger { background:none; border:none; cursor:pointer; padding:6px; display:flex; flex-direction:column; gap:5px; }
+  .mob-hamburger span { display:block; width:22px; height:2px; background:#fff; border-radius:2px; }
+  .mob-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:350; }
+  .mob-overlay.open { display:block; }
+
+  @media(max-width:900px){
+    .g2{ grid-template-columns:1fr; gap:16px; }
+    .g2>*{ min-width:0; width:100%; }
+    .kw-tool{ grid-template-columns:1fr; }
+    .wrap{ padding:24px 16px; }
+  }
+  @media(max-width:768px){
+    body{ overflow-x:hidden; }
+    .mob-bar{ display:flex; }
+    .sidebar{ transform:translateX(-100%); transition:transform .25s ease; }
+    .sidebar.open{ transform:translateX(0); }
+    .main{ margin-left:0 !important; padding-top:80px; }
+    [id]{ scroll-margin-top:90px; }
+    .score-panel{ padding:20px; }
+    .score-num{ font-size:56px; }
+    .score-denom{ font-size:22px; }
+    .stat-strip{ grid-template-columns:1fr 1fr; }
+    .kw-table td,.kw-table th{ padding:7px 8px; font-size:11px; }
+    .scroll-top{ bottom:20px; right:16px; }
+    [style*="right:39px"]{ right:0 !important; width:100px !important; }
+    div[style*="right:39px"]{ height:133px !important; }
+  }
+  @media(max-width:600px){
+    .wrap{ padding:14px 12px; }
+    .card{ padding:16px 14px; }
+    .hb-eyebrow{ font-size:14px; }
+    .step{ padding:12px 14px; }
+    .stat-strip{ grid-template-columns:1fr; }
+  }
+
+  .sidebar { position:fixed; top:0; left:0; bottom:0; width:220px; background:var(--navy); z-index:400; display:flex; flex-direction:column; border-right:1px solid rgba(255,255,255,.07); overflow-y:auto; }
+  .sb-logo { padding:24px 12px 20px; border-bottom:1px solid rgba(255,255,255,.07); text-align:center; }
+  .sb-logo a { display:block; line-height:0; }
+  .sb-logo img { height:120px; width:auto; display:inline-block; position:relative; left:-8px; }
+  .sb-nav { padding:16px 10px; flex:1; }
+  .sb-label { font-size:9px; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,.7); padding:0 8px; margin:16px 0 6px; }
+  .sb-label:first-child { margin-top:0; }
+  .sb-nav a { display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:5px; text-decoration:none; color:rgba(255,255,255,.5); font-size:12px; margin-bottom:2px; transition:background .15s,color .15s; }
+  .sb-nav a i { font-size:16px; flex-shrink:0; }
+  .sb-nav a:hover,.sb-nav a.active { background:rgba(0,181,173,.12); color:var(--teal); }
+  .sb-nav a.act { color:rgba(244,116,33,.65); }
+  .sb-nav a.act:hover { background:rgba(244,116,33,.1); color:var(--orange); }
+  .sb-divider { border:none; border-top:1px solid rgba(255,255,255,.07); margin:12px 0; }
+  .main { margin-left:220px; }
+
+  .kw-tool { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px; }
+  .kw-panel { background:var(--white); border:1px solid var(--border); border-radius:6px; overflow:hidden; }
+  .kw-panel-hdr { background:#0d1f35; color:#fff; padding:14px 18px; display:flex; align-items:center; justify-content:space-between; min-height:94px; box-sizing:border-box; }
+  .kw-panel-hdr.rec { background:#0d1f35; }
+  .kw-panel-hdr span { font-size:13px; font-weight:700; }
+  .kw-count { background:var(--teal); color:#fff; font-size:10px; font-weight:700; padding:2px 8px; border-radius:20px; }
+  .kw-panel-hdr.rec .kw-count { background:var(--orange); }
+  .kw-search { padding:12px 14px; border-bottom:1px solid var(--border); display:flex; gap:8px; }
+  .kw-search input { flex:1; border:1px solid var(--border); border-radius:4px; padding:7px 10px; font-size:12px; outline:none; color:var(--black); }
+  .kw-search input:focus { border-color:var(--teal); }
+  .kw-table { width:100%; border-collapse:collapse; font-size:12px; }
+  .kw-table th { background:var(--light); color:var(--mid); padding:8px 12px; text-align:left; font-size:10px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; border-bottom:1px solid var(--border); }
+  .kw-table td { padding:9px 12px; border-bottom:1px solid var(--border); color:var(--mid); }
+  .kw-table tr:last-child td { border-bottom:none; }
+  .kw-table tr:hover td { background:var(--light); }
+  .kw-table .kw-word { color:var(--navy); font-weight:500; }
+  .kw-vol { font-weight:600; color:var(--navy); }
+  .comp-high { display:inline-block; background:#FEE2E2; color:#B91C1C; font-size:10px; font-weight:700; padding:2px 8px; border-radius:3px; }
+  .comp-med  { display:inline-block; background:#FEF3C7; color:#92400E; font-size:10px; font-weight:700; padding:2px 8px; border-radius:3px; }
+  .comp-low  { display:inline-block; background:var(--teal-l); color:var(--teal-d); font-size:10px; font-weight:700; padding:2px 8px; border-radius:3px; }
+  .kw-add { background:none; border:1px solid var(--border); border-radius:3px; padding:3px 8px; font-size:10px; color:var(--muted); cursor:pointer; transition:all .15s; }
+  .kw-add:hover { border-color:var(--teal); color:var(--teal); background:var(--teal-l); }
+  .kw-rec-tag { display:inline-block; background:var(--orange-l); color:var(--orange-d); border:1px solid rgba(244,116,33,.2); border-radius:3px; padding:2px 6px; font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; margin-left:4px; vertical-align:middle; }
+  .kw-na-tag { display:inline-block; background:var(--light); color:var(--muted); border:1px solid var(--border); border-radius:3px; padding:2px 6px; font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; margin-left:4px; vertical-align:middle; }
+
+  .scroll-top { position:fixed; bottom:28px; right:28px; z-index:400; width:44px; height:44px; border-radius:50%; background:var(--navy); color:#fff; border:2px solid var(--teal); font-size:20px; cursor:pointer; opacity:0; pointer-events:none; transition:opacity .2s; display:flex; align-items:center; justify-content:center; }
+  .scroll-top.visible { opacity:1; pointer-events:auto; }
+  [id] { scroll-margin-top:20px; }
+</style>
+</head>
+<body>
+
+<div class="mob-bar">
+  <div class="mob-logo"><a href="#score"><img src="logo3.png" alt="Readerbull"></a></div>
+  <button class="mob-hamburger" onclick="toggleSidebar()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</div>
+<div class="mob-overlay" id="mob-overlay" onclick="toggleSidebar()"></div>
+
+<div class="sidebar" id="sidebar">
+  <div class="sb-logo"><a href="#score"><img src="logo3.png" alt="Readerbull"></a></div>
+  <nav class="sb-nav">
+    <div class="sb-label">Navigate</div>
+    <a href="#score"><i class="ti ti-chart-bar"></i>Overview</a>
+    <a href="#competitors"><i class="ti ti-users"></i>Market Analysis</a>
+    <a href="#marketing"><i class="ti ti-speakerphone"></i>Marketing Strategy</a>
+    <a href="#keywords"><i class="ti ti-search"></i>Keywords</a>
+    <a href="#quick-wins"><i class="ti ti-bolt"></i>Quick Wins</a>
+    <hr class="sb-divider">
+    <div class="sb-label">Tools</div>
+    <a href="#" class="act"><i class="ti ti-star"></i>Get Reviews</a>
+    <a href="#" class="act"><i class="ti ti-book-upload"></i>Build Your ARC</a>
+    <a href="#" class="act"><i class="ti ti-ad-2"></i>Ad Campaigns</a>
+    <hr class="sb-divider">
+    <div class="sb-label">Marketplaces</div>
+    <a href="#" onclick="return false;" class="act" style="background:rgba(244,116,33,.12);color:var(--orange);"><i class="ti ti-brand-amazon"></i>Amazon KDP</a>
+    <a href="#" onclick="return false;" class="act"><i class="ti ti-brand-tiktok"></i>TikTok Shop</a>
+    <a href="#" onclick="return false;" class="act"><i class="ti ti-building-store"></i>Barnes &amp; Noble</a>
+    <a href="#" onclick="return false;" class="act"><i class="ti ti-brand-apple"></i>Apple Books</a>
+    <a href="#" onclick="return false;" class="act"><i class="ti ti-headphones"></i>Audible / ACX</a>
+  </nav>
+</div>
+<button class="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
+<div class="main">
+<div class="wrap" id="score">
+
+<!-- SCORE + SUMMARY -->
+<div class="g2 mb">
+  <div style="border-radius:6px;overflow:hidden;border:1px solid var(--border);display:flex;flex-direction:column;">
+    <!-- Score + Cover -->
+    <div style="background:var(--navy);padding:32px;">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;">
+        <div>
+          <div class="score-eyebrow tip" style="position:relative;display:inline-flex;align-items:center;gap:8px;cursor:default;">Discoverability Score <span class="tip-q" style="border-color:rgba(244,116,33,.5);color:var(--orange);">?</span><span class="tip-box" style="font-weight:400;letter-spacing:0;text-transform:none;top:calc(100% + 8px);bottom:auto;left:0;right:auto;min-width:280px;background:#1a3550;border:1px solid rgba(0,181,173,.3);color:rgba(255,255,255,.85);padding:12px 14px;border-radius:4px;font-size:11px;line-height:1.6;box-shadow:0 4px 20px rgba(0,0,0,.4);">Your Discoverability Score measures how easy it is for readers to find and buy your book on Amazon. The higher your score, the more visible your book is and the more sales it generates.</span></div>
+          <div><span class="score-num" style="color:#00B5AD;">53</span><span class="score-denom">&thinsp;/ 100</span></div>
+          <div class="score-range tip" style="font-weight:400;background:rgba(0,181,173,.12);border:1px solid rgba(0,181,173,.3);position:relative;display:inline-flex;align-items:center;gap:6px;cursor:default;">Growing <span class="tip-q" style="border-color:rgba(255,255,255,.3);color:rgba(255,255,255,.7);font-size:9px;width:14px;height:14px;">?</span><span class="tip-box" style="font-weight:400;letter-spacing:0;text-transform:none;left:0;right:auto;min-width:220px;top:calc(100% + 8px);bottom:auto;"><strong>Getting Started:</strong> In the early stages of building discoverability. Focus on getting your listing set up correctly and gathering your first reviews. Hold off on ads until your foundations are in place.<br><br><strong>Early Stage:</strong> Your book is starting to build momentum. Continue strengthening your listing, grow your review count, and consider activating Amazon Ads.<br><br><strong>Growing:</strong> Solid foundations and gaining traction. Scale what is working: more reviews, optimised ad campaigns, and new formats.<br><br><strong>Established:</strong> Highly discoverable and performing well. Maintain momentum: protect your reviews, refine your ads, and leverage your visibility for additional titles.</span></div>
+        </div>
+        <img src="katie-glow-cover.jpg" alt="Beyond the Simulation by Katie Glow" style="width:158px;border-radius:4px;display:block;flex-shrink:0;position:relative;right:39px;filter:brightness(1.5) saturate(1.1);box-shadow:0 8px 32px rgba(0,0,0,.5);">
+      </div>
+    </div>
+    <!-- Progress bars -->
+    <div style="background:var(--navy);padding:28px 32px 32px;">
+    <div class="bar-row">
+
+      <!-- 1. Listing /20 -->
+      <div class="bar-item">
+        <div class="bar-meta">
+          <span class="bar-lbl tip">Listing <span class="tip-q">i</span>
+            <span class="tip-box">
+              Your Listing score covers your title, subtitle, description, categories, backend keywords, cover, and price. Each element plays a role in how Amazon surfaces your book to the right readers.
+            </span>
+          </span>
+          <span class="bar-val">9 / 20</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:45%;background:var(--teal);"></div></div>
+      </div>
+
+      <!-- 2. Reviews & Ratings -->
+      <div class="bar-item">
+        <div class="bar-meta">
+          <span class="bar-lbl tip">Reviews &amp; Ratings <span class="tip-q">i</span>
+            <span class="tip-box">
+              Verified reviews are one of the strongest signals Amazon uses to rank and convert books. More reviews improve organic rank, which drives more sales, which generates more reviews. Target 15 before running ads, then keep building.
+            </span>
+          </span>
+          <span class="bar-val">2</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:10%;background:var(--teal);"></div></div>
+      </div>
+
+      <!-- 3. Star Rating -->
+      <div class="bar-item">
+        <div class="bar-meta">
+          <span class="bar-lbl tip">&#9733;&#9733;&#9733;&#9733;&#9733; Rating <span class="tip-q">i</span>
+            <span class="tip-box">
+              Your star rating is the average score left by readers who have reviewed your book. A rating of 4.0 or above is the target. The best way to maintain a strong rating is to deliver on what your title and description promise.
+            </span>
+          </span>
+          <span class="bar-val">5.0 / 5 <span style="color:var(--orange);font-size:11px;">&#8593;</span></span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--teal);"></div></div>
+      </div>
+
+      <!-- 4. Sales/mo milestone bar -->
+      <div class="bar-item" style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,.08);">
+        <div class="bar-meta">
+          <span class="bar-lbl tip">Sales/mo <span class="tip-q">i</span>
+            <span class="tip-box">
+              Your estimated monthly revenue from this book. $500/mo is your first milestone. $1,000+/mo is the target. Reviews, a paperback edition, and Amazon Ads are the most effective ways to grow this figure.
+            </span>
+          </span>
+        </div>
+        <div class="bar-track" style="position:relative;">
+          <div class="bar-fill" style="width:0.5%;background:var(--orange);"></div>
+          <div style="position:absolute;top:0;left:50%;width:2px;height:6px;background:rgba(255,255,255,.25);"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:5px;position:relative;">
+          <span style="font-size:11px;color:rgba(255,255,255,.85);font-weight:500;position:absolute;left:50%;transform:translateX(-50%);">$500</span>
+          <span style="font-size:11px;color:rgba(255,255,255,.85);font-weight:500;margin-left:auto;">$1,000+</span>
+        </div>
+      </div>
+
+      <!-- Amazon Ads pill -->
+      <div style="margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:8px;">
+        <span class="bar-lbl tip" style="font-size:12px;position:relative;cursor:default;">Amazon Ads <span class="tip-q" style="border-color:rgba(244,116,33,.5);color:var(--orange);font-size:9px;width:14px;height:14px;">?</span><span class="tip-box" style="font-weight:400;letter-spacing:0;text-transform:none;min-width:240px;">Amazon Ads increase your book&rsquo;s visibility in search results and on competitor pages. We recommend activating ads once your listing is fully optimised and you have at least 15 reviews. Running ads before those foundations are in place wastes budget.</span></span>
+        <span style="display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(220,50,50,.15);border:1px solid rgba(220,50,50,.35);color:#f47171;"><span style="width:7px;height:7px;border-radius:50%;background:#f47171;display:inline-block;"></span>Not active</span>
+      </div>
+
+      <!-- BSR 3-column block -->
+      <div style="margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.06);">
+        <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#F47421;margin-bottom:12px;">Best Seller Rank</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px;">
+          <div style="background:rgba(255,255,255,.07);border-radius:6px;padding:10px;text-align:center;">
+            <div style="font-size:9px;color:rgba(255,255,255,.5);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;">Your BSR</div>
+            <div style="font-size:15px;font-weight:800;color:#fff;">1,275,000</div>
+            <div style="margin-top:6px;font-size:9px;font-weight:700;background:rgba(220,50,50,.15);border:1px solid rgba(220,50,50,.35);color:#f47171;padding:2px 8px;border-radius:20px;display:inline-block;">Needs Visibility</div>
+          </div>
+          <div style="background:rgba(255,255,255,.07);border-radius:6px;padding:10px;text-align:center;">
+            <div style="font-size:9px;color:rgba(255,255,255,.5);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;">Niche Average</div>
+            <div style="font-size:15px;font-weight:800;color:#fff;">164,604</div>
+            <div style="margin-top:6px;font-size:9px;font-weight:700;background:rgba(244,116,33,.12);border:1px solid rgba(244,116,33,.3);color:#F47421;padding:2px 8px;border-radius:20px;display:inline-block;">Gap to Close</div>
+          </div>
+          <div style="background:rgba(255,255,255,.07);border-radius:6px;padding:10px;text-align:center;">
+            <div style="font-size:9px;color:rgba(255,255,255,.5);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;">Top Competitor</div>
+            <div style="font-size:15px;font-weight:800;color:#00B5AD;">547</div>
+            <div style="margin-top:6px;font-size:9px;font-weight:700;background:rgba(0,181,173,.12);border:1px solid rgba(0,181,173,.3);color:#00B5AD;padding:2px 8px;border-radius:20px;display:inline-block;">Target</div>
+          </div>
+        </div>
+        <div style="font-size:10px;color:rgba(255,255,255,.4);line-height:1.5;">A lower BSR means more sales. The top competitor sits at 547. Reviews, correct category placement, and a targeted ad campaign are the fastest route to closing that gap.</div>
+      </div>
+    </div>
+    </div><!-- end bars -->
+
+  </div><!-- end score panel -->
+
+  <div style="display:flex;flex-direction:column;gap:20px;">
+    <!-- BOOK SUMMARY -->
+    <div class="card">
+      <div class="card-hdr">Book Summary</div>
+      <div style="margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);">
+        <div style="font-size:22px;font-weight:400;color:#111111;line-height:1.35;margin-bottom:4px;">Beyond the Simulation</div>
+        <div style="font-size:15px;color:var(--orange);margin-bottom:8px;">by Katie Glow</div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span style="color:#F47421;font-size:13px;letter-spacing:3px;">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+          <span style="font-size:12px;color:var(--mid);">5.0 &nbsp;&middot;&nbsp; <span style="color:var(--orange);font-weight:700;">(2)</span></span>
+        </div>
+      </div>
+      <p style="font-size:13px;color:var(--mid);line-height:1.7;margin-bottom:12px;"><em>Beyond the Simulation</em> is a dark sci fi romance novel available as a Kindle ebook ($5.99) and paperback ($14.99), with Kindle Unlimited enrollment active. The listing currently has 2 ratings and reviews and a 5.0 star average. No A+ Content is live on the listing.</p>
+      <p style="font-size:13px;font-weight:700;color:var(--mid);line-height:1.6;">Dark sci fi romance generates over $81,000 every month across 14 books on Amazon. Within 6 to 12 months, this title has a clear path to $6,583 a month. Category placement, reviews, and a targeted ad campaign are all that stand between the current position and that result.</p>
+      <div class="stat-strip">
+        <div class="stat-cell">
+          <div class="stat-v">14</div>
+          <div class="stat-l">Books Selling in This Niche</div>
+          <div><span style="display:inline-block;margin-top:6px;font-size:10px;background:#FEF3C7;color:#92400E;padding:2px 10px;border-radius:20px;font-weight:700;">Active Competition</span></div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-v">~$81k/mo</div>
+          <div class="stat-l">KDP Niche Revenue</div>
+          <div><span style="display:inline-block;margin-top:6px;font-size:10px;background:var(--teal-l);color:var(--teal-d);padding:2px 10px;border-radius:20px;font-weight:700;">&#10003; Real Demand</span></div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-v" style="color:var(--orange);">Fiction</div>
+          <div class="stat-l">Content Type</div>
+          <div><span style="display:inline-block;margin-top:6px;font-size:10px;background:var(--teal-l);color:var(--teal-d);padding:2px 10px;border-radius:20px;font-weight:700;">&#10003; Series Potential</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROFESSIONAL ASSESSMENT -->
+    <div class="card">
+      <div class="card-hdr">Professional Assessment</div>
+      <p style="font-size:13px;color:var(--mid);line-height:1.7;margin-bottom:12px;">Beyond the Simulation is live in both Kindle and paperback formats with a 5.0 star average from 2 reviews and no ad spend. The listing is missing A+ Content and is not yet placed in the highest-revenue categories available to this book.</p>
+      <p style="font-size:13px;color:var(--mid);line-height:1.7;margin-bottom:14px;">Category correction comes first: dark sci fi romance generates $5,756 a month on average; sci fi AI romance generates $52. Build to 15 reviews via ARC outreach, then launch Sponsored Products for the paperback at $5 to $7 a day.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;">
+        <span class="badge b-teal">KU Enrolled</span>
+        <span class="badge b-teal">Kindle $5.99</span>
+        <span class="badge b-teal">Paperback $14.99</span>
+        <span class="badge b-teal">5.0 Stars</span>
+        <span class="badge b-orange">2 Reviews</span>
+        <span class="badge b-orange">No A+ Content</span>
+        <span class="badge b-orange">No Ads Running</span>
+        <span class="badge b-navy">BSR 1,275,000</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- INSIGHT BANNER -->
+<div class="banner mb">
+  <h3>&#128161; No Reviews. No Ads. No Revenue. The Data Is Clear.</h3>
+  <p>Dark sci fi romance generates over $81,000 every month across 14 books on Amazon. Signal Lost earns $3,058 a month with 82 reviews and a full ad campaign behind it. The gap between $5 and $3,058 is not content quality. It is category placement, reviews, and a targeted ad campaign.</p>
+  <div>
+    <span class="banner-stat">Currently: $5/mo &middot; 2 reviews &middot; no ads</span>
+    <span class="banner-stat">Target: $6,583/mo &middot; Viking Captive benchmark &middot; 316 reviews</span>
+  </div>
+</div>
+
+<!-- MARKETING STRATEGY -->
+<div id="marketing" style="position:relative;top:-48px;"></div>
+<div class="sec-label">Marketing Strategy</div>
+
+<!-- STEP 1 -->
+<div class="card mb">
+  <div class="hb-eyebrow">Step 1: Correct Your Category Placement</div>
+  <p style="font-size:15px;color:var(--mid);line-height:1.7;margin-bottom:16px;">The category your book sits in determines which readers find it and what revenue is possible. Sci fi AI romance generates $52 a month on average across 15 books. Dark sci fi romance generates $5,756 a month on average across 14 books. That difference is entirely down to category placement. The right categories are not just labels: they are the sales mechanism.</p>
+  <div class="item">
+    <div class="item-icon icon-orange">&#10003;</div>
+    <div>
+      <div class="item-t">Move into sci fi dystopian categories first</div>
+      <div class="item-b">Sci fi dystopian is a high-traffic, well-established browse path with a proven buyer base. The average BSR in this category is 436,849, which puts it within realistic reach in the near term. Email KDP support via Author Central and request Science Fiction &rsaquo; Dystopian as a category. This is the faster route to organic visibility while reviews are still building.</div>
+    </div>
+  </div>
+  <div class="item">
+    <div class="item-icon icon-orange">&#10003;</div>
+    <div>
+      <div class="item-t">Add dark sci fi romance as a second category</div>
+      <div class="item-b">Dark sci fi romance is where the revenue ceiling lives. The top books in this niche earn $3,058 to over $6,583 a month. Request this category alongside sci fi dystopian so the book benefits from both browse paths simultaneously. The average price in dark sci fi romance is $6.77, and at $5.99 this listing is priced competitively to convert.</div>
+    </div>
+  </div>
+  <div class="item">
+    <div class="item-icon icon-orange">&#10003;</div>
+    <div>
+      <div class="item-t">Update your 7 KDP keyword fields to match the new categories</div>
+      <div class="item-b">KDP backend keywords must align with the categories you are targeting. Once categories are corrected, replace any generic or mismatched keywords with dark sci fi romance, dystopian romance, and simulation romance terms. The Readerbull Recommended panel in this audit contains the priority terms. Copy them directly into your 7 keyword fields in KDP.</div>
+    </div>
+  </div>
+  <div class="item" style="margin-bottom:0;">
+    <div class="item-icon icon-orange">&#10003;</div>
+    <div>
+      <div class="item-t">Rewrite your description to speak to dark romance readers</div>
+      <div class="item-b">Dark romance readers want emotional intensity, high stakes, and a relationship that breaks the rules. Your first two sentences need to put the reader inside that tension before they scroll. If your opening line describes the world-building before the emotional hook, rewrite it. Lead with the reader's desire, not the premise.</div>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:20px;"><span style="font-size:28px;color:#F47421;line-height:1;">&#8595;</span></div>
+</div>
+
+<!-- STEP 2 -->
+<div class="card mb">
+  <div class="hb-eyebrow">Step 2: Build to 15 Reviews Before Running Ads</div>
+  <p style="font-size:15px;color:var(--mid);line-height:1.7;margin-bottom:16px;">With 2 ratings and reviews and a 5.0 star average, the book is delivering for readers. Reaching 15 reviews gives the listing the social proof it needs to convert ad traffic into sales. At 15 reviews this title is a credible, competitive entry in dark sci fi romance. The more reviews built from there, the stronger the conversion rate becomes. Romance readers on ARC platforms are highly active and leave detailed reviews.</p>
+  <div class="callout" style="margin-bottom:16px;">A 5.0 star average from 2 reviews is a strong foundation. Every additional genuine review locks in that quality signal and makes the listing more convincing to new readers. The goal is not just quantity: it is consistent quality at volume.</div>
+  <div class="item">
+    <div class="item-icon icon-orange">&#10003;</div>
+    <div>
+      <div class="item-t">Use an ARC service to reach 20 to 30 reviews quickly</div>
+      <div class="item-b">BookSirens, Hidden Gems, and NetGalley connect authors with readers who have opted in to receive free books in exchange for honest reviews. These are legitimate, Amazon-compliant services. The dark romance readership on these platforms is large and highly engaged. A well-presented ARC campaign for this title can generate 20 to 40 reviews within 4 to 6 weeks.</div>
+    </div>
+  </div>
+  <div class="item">
+    <div class="item-icon icon-orange">&#10003;</div>
+    <div>
+      <div class="item-t">Add a review request inside the book</div>
+      <div class="item-b">Place a natural, warm request mid-book and at the back. Many readers who genuinely enjoyed the book simply never think to leave a review without a prompt. Do not ask for a specific star rating: Amazon's terms prohibit this. A genuine ask yields genuine responses, and every future sale from this point forward has a higher chance of generating a review.</div>
+    </div>
+  </div>
+  <div class="item" style="margin-bottom:0;">
+    <div class="item-icon icon-orange">&#10003;</div>
+    <div>
+      <div class="item-t">Reach dark romance and sci fi communities directly</div>
+      <div class="item-b">BookTok and BookTwt have thriving dark romance communities. Reddit's r/DarkRomance and r/scifiromance have tens of thousands of active readers. Facebook groups for dark romance and sci fi romance readers are precisely the audience this book is written for. A sincere, authentic pitch to these communities can generate reviews and early word-of-mouth simultaneously.</div>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:20px;"><span style="font-size:28px;color:#F47421;line-height:1;">&#8595;</span></div>
+</div>
+
+<!-- STEP 3 -->
+<div class="hb-card mb">
+  <div class="hb-eyebrow">Step 3: Launch Amazon Ads for Both Formats</div>
+  <div class="g2" style="gap:32px;align-items:start;">
+    <div>
+      <p style="font-size:13px;color:var(--mid);line-height:1.7;margin-bottom:20px;">This is the action that moves the Sales/mo bar. Reviews get the listing ready. Ads move the number. Every book earning over $200 a month in dark sci fi romance is running ads. The Tether Protocol earns $441 a month with 21 reviews. That is the 90-day target: reachable at 15 reviews with a focused Sponsored Products campaign. The paperback at $14.99 generates a higher royalty per sale and is the primary ad target. The Kindle at $5.99 supports KU reads and conversion volume.</p>
+      <div class="item">
+        <div class="item-icon icon-orange">&#10003;</div>
+        <div>
+          <div class="item-t">Start with Sponsored Products at $5 to $7 a day</div>
+          <div class="item-b">Target keyword phrases: &ldquo;dark sci fi romance,&rdquo; &ldquo;sci fi dystopian romance,&rdquo; and &ldquo;simulation romance books.&rdquo; These reach buyers with paid-book intent. Run for 14 days before reviewing results. Do not increase budget until the campaign shows a profitable ACoS. Pause any keyword without a sale after 14 days.</div>
+        </div>
+      </div>
+      <div class="item">
+        <div class="item-icon icon-orange">&#10003;</div>
+        <div>
+          <div class="item-t">Add Sponsored Display ads on competitor ASINs</div>
+          <div class="item-b">Target the product pages of Signal Lost and The Tether Protocol. Buyers browsing those pages are already in a dark sci fi romance buying mindset. A well-placed display ad intercepts that intent directly and converts at a higher rate than keyword-only campaigns because the reader is already primed to buy.</div>
+        </div>
+      </div>
+      <div class="item" style="margin-bottom:0;">
+        <div class="item-icon icon-orange">&#10003;</div>
+        <div>
+          <div class="item-t">Target ACoS below 40% for the paperback</div>
+          <div class="item-b">At $14.99 paperback, the royalty is approximately $4.84. A profitable ACoS means spending less than $4.84 per sale in ad spend. Scale only what converts consistently. The Tether Protocol benchmark at 21 reviews and $441 a month is a realistic 90-day target once ads are live and categories are corrected.</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:12px;">Dark Sci Fi Romance: Niche Earnings Snapshot</p>
+      <table style="margin-bottom:16px;">
+        <thead><tr><th>Book</th><th class="tc">Price</th><th class="tc">Reviews</th><th class="tr">Rev/Mo</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Signal Lost</strong> <span class="badge b-navy" style="font-size:9px;">Top Earner</span></td><td class="tc">-</td><td class="tc" style="font-weight:700;">82</td><td class="tr" style="color:var(--teal-d);font-weight:700;">$3,058</td></tr>
+          <tr><td>Viking Captive <span class="badge b-teal" style="font-size:9px;">12-Mo Target</span></td><td class="tc">-</td><td class="tc">316</td><td class="tr" style="color:var(--teal-d);font-weight:700;">$6,583</td></tr>
+          <tr><td>us: the AI in me</td><td class="tc">-</td><td class="tc">-</td><td class="tr">$327</td></tr>
+          <tr><td>The Tether Protocol <span class="badge b-orange" style="font-size:9px;">90-Day Target</span></td><td class="tc">-</td><td class="tc">21</td><td class="tr">$441</td></tr>
+        </tbody>
+      </table>
+      <div class="callout callout-orange">
+        <strong>The Tether Protocol (21 reviews, $441/mo)</strong> is the closest structural parallel to this listing and the most realistic 90-day revenue target once categories are corrected and ads go live.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STEP 4 -->
+<div class="card mb">
+  <div class="hb-eyebrow">Step 4: Add A+ Content and Optimize Your Listing</div>
+  <p style="font-size:15px;color:var(--mid);line-height:1.7;margin-bottom:16px;">A+ Content is free to create in KDP and is one of the most effective listing upgrades available to authors. It adds branded images, a comparison module, and expanded text sections below the description. Dark romance buyers respond strongly to visual storytelling. A listing with A+ Content converts at a measurably higher rate than one without it. With the cover already delivering visually, A+ Content is the next logical step.</p>
+  <div class="item">
+    <div class="item-icon icon-orange">&#10003;</div>
+    <div>
+      <div class="item-t">Build A+ Content in Author Central</div>
+      <div class="item-b">Log in to Amazon Author Central and navigate to the A+ Content tool. Use the cover image and any additional graphics to create a branded module below the description. At minimum, add a text-and-image row that reinforces the dark romance hook and positions the book as part of a series. This takes under two hours and is live within 24 to 48 hours of submission.</div>
+    </div>
+  </div>
+  <div class="item" style="margin-bottom:0;">
+    <div class="item-icon icon-orange">&#10003;</div>
+    <div>
+      <div class="item-t">Ensure your series branding is visible on the listing</div>
+      <div class="item-b">If this is the first book in a series, the series name should appear in the subtitle field and in the A+ Content module. Series branding is a conversion signal for dark romance readers: it tells them there is more to read and raises the value of the purchase. A reader who knows this is Book One is more likely to buy than one who assumes it is a standalone.</div>
+    </div>
+  </div>
+</div>
+
+<!-- MARKET ANALYSIS -->
+<div id="competitors" style="position:relative;top:-48px;"></div>
+<div class="sec-label">Market Analysis</div>
+<div class="card mb">
+  <div class="g2" style="gap:32px;align-items:start;">
+    <div>
+      <div class="card-title">Niche Summary: Dark Sci Fi Romance</div>
+      <div class="callout" style="margin-bottom:18px;">
+        Dark sci fi romance generates over $81,000 every month across 14 books. The niche average BSR is 164,604. Signal Lost sits at a BSR of 547 with 82 reviews and earns $3,058 a month. The Tether Protocol earns $441 a month at 21 reviews. The books earning real revenue in this niche are running ads and sitting in the right categories. Both are correctable actions.
+      </div>
+      <div class="item">
+        <div class="item-icon icon-orange">&#10003;</div>
+        <div>
+          <div class="item-t">Ads separate earners from non-earners in this niche</div>
+          <div class="item-b">Every book generating over $200 a month in dark sci fi romance is running a paid ad campaign. The books not running ads are earning close to nothing despite having listings. The pattern is consistent: ads are not optional for revenue in this niche, they are the mechanism by which paid books reach buyers.</div>
+        </div>
+      </div>
+      <div class="item">
+        <div class="item-icon icon-orange">&#10003;</div>
+        <div>
+          <div class="item-t">The 90-day benchmark: The Tether Protocol</div>
+          <div class="item-b">BSR 107,863. 21 reviews. $441 a month with ads running. A dark sci fi romance title. This is the closest structural parallel to this book and the most realistic 90-day revenue target once category placement is corrected and the first ad campaign is live.</div>
+        </div>
+      </div>
+      <div class="item" style="margin-bottom:0;">
+        <div class="item-icon icon-orange">&#10003;</div>
+        <div>
+          <div class="item-t">Niche average price $6.77. At $5.99 this listing is positioned to convert.</div>
+          <div class="item-b">The dark sci fi romance average price sits at $6.77. At $5.99, this listing undercuts the niche average, which increases click-through rate in sponsored results and improves conversion for browsers comparing options. The paperback at $14.99 is consistent with the mid-range of the paid tier and is the stronger royalty vehicle for ads.</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:12px;">Niche Data: Dark Sci Fi Romance (Books)</p>
+      <table style="margin-bottom:16px;">
+        <thead><tr><th>Book</th><th class="tc">BSR</th><th class="tr">Rev/Mo</th><th class="tc">Reviews</th><th class="tc">Ads</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Signal Lost</strong> <span class="badge" style="background:rgba(0,181,173,.15);color:var(--teal);font-size:9px;">Niche Best Seller</span></td><td class="tc">547</td><td class="tr" style="color:var(--teal-d);font-weight:700;">$3,058</td><td class="tc">82</td><td class="tc"><span class="badge b-teal">Yes</span></td></tr>
+          <tr><td><strong>Viking Captive</strong> <span class="badge" style="background:rgba(0,181,173,.15);color:var(--teal);font-size:9px;">12-Mo Target</span></td><td class="tc">-</td><td class="tr" style="color:var(--teal-d);font-weight:700;">$6,583</td><td class="tc">316</td><td class="tc"><span class="badge b-teal">Yes</span></td></tr>
+          <tr><td>us: the AI in me</td><td class="tc">49,122</td><td class="tr" style="color:var(--teal-d);">$327</td><td class="tc">-</td><td class="tc"><span class="badge b-teal">Yes</span></td></tr>
+          <tr><td>The Tether Protocol <span class="badge b-orange" style="font-size:9px;">90-Day Target</span></td><td class="tc">107,863</td><td class="tr" style="color:var(--teal-d);">$441</td><td class="tc">21</td><td class="tc"><span class="badge b-teal">Yes</span></td></tr>
+          <tr><td style="font-weight:700;color:var(--teal-d);">Beyond the Simulation</td><td class="tc">1,275,000</td><td class="tr" style="color:var(--orange);">$5</td><td class="tc">2</td><td class="tc"><span class="badge b-muted">No</span></td></tr>
+        </tbody>
+      </table>
+      <div class="callout callout-orange">
+        The niche generates over $81,000 every month. The gap between $5 and $441 a month is 21 reviews and an active ad campaign. Both are achievable within 90 days.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BOOK PORTFOLIO OPPORTUNITY -->
+<div class="sec-label">Book Portfolio Opportunity</div>
+<div class="card mb" style="border-top:4px solid var(--orange);">
+  <div class="g2" style="gap:32px;align-items:start;">
+    <div>
+      <div class="card-title">A Series Compounds Discoverability and Revenue</div>
+      <div class="callout callout-orange" style="margin-bottom:18px;">
+        <strong>Two books by the same author in the same series cross-sell each other automatically.</strong> Amazon&rsquo;s &ldquo;customers also bought&rdquo; system means every reader who buys Book One is shown Book Two. Each new title adds a new keyword footprint, a new category placement, and a new set of search rankings. Series readers are also the most loyal buyers on the platform.
+      </div>
+      <div class="item">
+        <div class="item-icon icon-orange">1</div>
+        <div>
+          <div class="item-t">Book Two: Continue the Simulation Series</div>
+          <div class="item-b">Dark romance readers finish a book and immediately search for the next. A series continuation captures that impulse at the peak of engagement. Signal Lost is evidence that readers in this niche follow a series: 82 reviews and a top-performing BSR require sustained reader loyalty. A second title in the Beyond the Simulation series starts with a warm audience already primed to buy.</div>
+        </div>
+      </div>
+      <div class="item">
+        <div class="item-icon icon-orange">2</div>
+        <div>
+          <div class="item-t">A companion novella at a lower price point</div>
+          <div class="item-b">A shorter companion story at $2.99 to $3.99 serves as a series entry point for price-sensitive readers. Once inside the world, those readers purchase full-price books at a high rate. Novellas also generate their own reviews, keywords, and category placements, expanding the total search footprint without requiring a full-length manuscript.</div>
+        </div>
+      </div>
+      <div class="item" style="margin-bottom:0;">
+        <div class="item-icon icon-orange">3</div>
+        <div>
+          <div class="item-t">A standalone dark sci fi romance in an adjacent sub-niche</div>
+          <div class="item-b">The simulation concept has clear crossover into dark romance sub-niches including captive romance, morally grey heroes, and enemies-to-lovers. A standalone title in one of these sub-niches reaches a new set of search terms while cross-selling back to the existing catalogue. Authors with two or more titles in the same genre consistently outperform single-title authors at equivalent review counts.</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:12px;">Why Series Revenue Compounds</p>
+      <div class="callout" style="margin-bottom:14px;">
+        Amazon&rsquo;s also-bought and frequently-viewed-together algorithms treat series books as a cluster. Every sale of Book One is a potential sale of Book Two. Every review on Book Two increases the visibility of Book One. The compounding effect means a two-book series earning $441 a month per title does not earn $882 a month combined: it earns significantly more because each book amplifies the other&rsquo;s organic ranking.
+      </div>
+      <div class="callout callout-orange">
+        <strong>Focus on Steps 1 to 4 first.</strong> Correct categories, build to 15 reviews, and get ads running before starting the next title. Once the first book is earning consistently, a second title compounds that income without starting from zero.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- KEYWORDS -->
+<div id="keywords" style="position:relative;top:-48px;"></div>
+<div class="sec-label">Keywords</div>
+<div class="callout" style="margin-bottom:18px;">
+  <strong>Amazon keyword research for dark sci fi romance and related terms.</strong> Fiction, AI romance, and non-targeted genre terms have been flagged. These are not your buyer. The Readerbull Recommended panel shows the dark romance and dystopian buyer-intent terms. Click <strong>+ Add</strong> to save to your KDP list.
+</div>
+<div class="kw-tool">
+  <div class="kw-panel">
+    <div class="kw-panel-hdr">
+      <span><i class="ti ti-brand-amazon" style="margin-right:6px;font-size:14px;vertical-align:middle;"></i>Amazon Keywords</span>
+      <span class="kw-count" id="amazon-count">12</span>
+    </div>
+    <div class="kw-search">
+      <input type="text" id="amazon-search" placeholder="Search keywords&hellip;" oninput="filterTable('amazon-tbody','amazon-count',this.value)">
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="kw-table">
+        <thead><tr><th>Keyword</th><th class="tr">Volume</th><th class="tc">Status</th><th></th></tr></thead>
+        <tbody id="amazon-tbody">
+          <tr><td class="kw-word">sci fi romance</td><td class="tr kw-vol">High</td><td class="tc"><span class="comp-high">Use</span></td><td><button class="kw-add">+ Add</button></td></tr>
+          <tr><td class="kw-word">sci-fi romance</td><td class="tr kw-vol">High</td><td class="tc"><span class="comp-high">Use</span></td><td><button class="kw-add">+ Add</button></td></tr>
+          <tr><td class="kw-word">dark sci fi romance</td><td class="tr kw-vol">Medium</td><td class="tc"><span class="comp-high">Use</span></td><td><button class="kw-add">+ Add</button></td></tr>
+          <tr><td class="kw-word">sci fi dark romance</td><td class="tr kw-vol">Medium</td><td class="tc"><span class="comp-high">Use</span></td><td><button class="kw-add">+ Add</button></td></tr>
+          <tr><td class="kw-word">sci fi romance series</td><td class="tr kw-vol">Medium</td><td class="tc"><span class="comp-med">Use</span></td><td><button class="kw-add">+ Add</button></td></tr>
+          <tr><td class="kw-word">dystopian romance books</td><td class="tr kw-vol">Medium</td><td class="tc"><span class="comp-med">Use</span></td><td><button class="kw-add">+ Add</button></td></tr>
+          <tr><td class="kw-word">sci fi dystopian books</td><td class="tr kw-vol">Low</td><td class="tc"><span class="comp-med">Use</span></td><td><button class="kw-add">+ Add</button></td></tr>
+          <tr><td class="kw-word">futuristic dark romance</td><td class="tr kw-vol">Low</td><td class="tc"><span class="comp-med">Use</span></td><td><button class="kw-add">+ Add</button></td></tr>
+          <tr><td class="kw-word">science fiction romance</td><td class="tr kw-vol">Medium</td><td class="tc"><span class="comp-med">Use</span></td><td><button class="kw-add">+ Add</button></td></tr>
+          <tr><td class="kw-word">sci fi AI romance</td><td class="tr kw-vol">Low</td><td class="tc"><span class="comp-low">Skip</span></td><td><button class="kw-add">+ Add</button></td></tr>
+          <tr><td class="kw-word">ai romance books</td><td class="tr kw-vol">Low</td><td class="tc"><span class="comp-low">Skip</span></td><td><button class="kw-add">+ Add</button></td></tr>
+          <tr><td class="kw-word">free kindle sci fi romance</td><td class="tr kw-vol">Medium</td><td class="tc"><span class="comp-low">Skip</span></td><td><button class="kw-add">+ Add</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="kw-panel">
+    <div class="kw-panel-hdr rec">
+      <span><div style="display:inline-block;width:66px;height:66px;overflow:hidden;vertical-align:middle;margin-right:10px;flex-shrink:0;border-radius:50%;"><img src="logo3.png" style="width:66px;height:auto;display:block;"></div>Readerbull Recommended Keywords</span>
+      <span class="kw-count" id="rec-count">8</span>
+    </div>
+    <div class="kw-search">
+      <input type="text" id="rec-search" placeholder="Filter recommendations&hellip;" oninput="filterTable('rec-tbody','rec-count',this.value)">
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="kw-table">
+        <thead><tr><th>Keyword</th><th class="tr">Volume</th><th class="tc">Status</th><th></th></tr></thead>
+        <tbody id="rec-tbody">
+          <tr><td class="kw-word">dark sci fi romance</td><td class="tr kw-vol">Medium</td><td class="tc"><span class="comp-high">Priority</span></td><td><button class="kw-add">+ Add</button></td></tr>
+          <tr><td class="kw-word">sci fi dystopian romance</td><td class="tr kw-vol">Medium</td><td class="tc"><span class="comp-high">Priority</span></td><td><button class="kw-add">+ Add</button></td></tr>
+          <tr><td class="kw-word">sci-fi romance</td><td class="tr kw-vol">High</td><td class="tc"><span class="comp-med">Best Fit</span></td><td><button class="kw-add">+ Add</button></td></tr>
+          <tr><td class="kw-word">dark romance sci fi</td><td class="tr kw-vol">Medium</td><td class="tc"><span class="comp-med">Best Fit</span></td><td><button class="kw-add">+ Add</button></td></tr>
+          <tr><td class="kw-word">simulation romance books</td><td class="tr kw-vol">Low</td><td class="tc"><span class="comp-med">Best Fit</span></td><td><button class="kw-add">+ Add</button></td></tr>
+          <tr><td class="kw-word">sci fi romance series</td><td class="tr kw-vol">Medium</td><td class="tc"><span class="comp-med">Best Fit</span></td><td><button class="kw-add">+ Add</button></td></tr>
+          <tr><td class="kw-word">futuristic dark romance</td><td class="tr kw-vol">Low</td><td class="tc"><span class="comp-med">Best Fit</span></td><td><button class="kw-add">+ Add</button></td></tr>
+          <tr><td class="kw-word">dystopian romance books</td><td class="tr kw-vol">Medium</td><td class="tc"><span class="comp-med">Best Fit</span></td><td><button class="kw-add">+ Add</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="padding:12px 14px;border-top:1px solid var(--border);font-size:10px;color:var(--muted);line-height:1.5;">
+      Volume unconfirmed where marked. Research before use. Buyer-intent terms targeting paid dark romance and dystopian readers.
+    </div>
+  </div>
+</div>
+
+<!-- QUICK WINS -->
+<div id="quick-wins" style="position:relative;top:-48px;"></div>
+<div class="sec-label">Quick Wins</div>
+<div class="card mb">
+  <div class="card-hdr">Do These in Order: Sequence Matters</div>
+  <div class="step step-orange">
+    <div class="step-num num-orange">1</div>
+    <div>
+      <div class="step-t">Contact KDP Support to correct categories this week</div>
+      <div class="step-b">Email KDP Support via Author Central to request Science Fiction &rsaquo; Dystopian as a primary category and dark sci fi romance as a second. This is the single highest-impact action available and it costs nothing. The average niche revenue difference between sci fi AI romance ($52/mo) and dark sci fi romance ($5,756/mo) is entirely a function of this one decision. Takes one email.</div>
+    </div>
+  </div>
+  <div class="step step-orange">
+    <div class="step-num num-orange">2</div>
+    <div>
+      <div class="step-t">Update your 7 KDP keyword fields to match the new categories</div>
+      <div class="step-b">Replace any generic or mismatched terms with dark sci fi romance, sci fi dystopian romance, and simulation romance keywords from the Readerbull Recommended panel above. Backend keywords must align with the categories being targeted for Amazon's algorithm to surface the listing to the right readers. Takes 15 minutes.</div>
+    </div>
+  </div>
+  <div class="step step-orange">
+    <div class="step-num num-orange">3</div>
+    <div>
+      <div class="step-t">Sign up to an ARC service and target 20 to 30 reviews</div>
+      <div class="step-b">BookSirens or Hidden Gems. The dark romance readership on these platforms is large and highly engaged. A well-presented ARC campaign for this title can generate 20 to 40 reviews within 4 to 6 weeks. This is the fastest legitimate path to the 15-review threshold needed for ads to convert profitably.</div>
+    </div>
+  </div>
+  <div class="step step-orange">
+    <div class="step-num num-orange">4</div>
+    <div>
+      <div class="step-t">Add a review request inside the book</div>
+      <div class="step-b">Update the Kindle and paperback files with a warm, genuine request mid-book and at the back. Every future sale now has a higher chance of generating a review. One afternoon of work, permanent compound returns. Do not ask for a specific rating: Amazon prohibits this.</div>
+    </div>
+  </div>
+  <div class="step step-teal">
+    <div class="step-num num-teal">5</div>
+    <div>
+      <div class="step-t">Launch Sponsored Products at $5 to $7 a day once at 15 reviews</div>
+      <div class="step-b">Target &ldquo;dark sci fi romance,&rdquo; &ldquo;sci fi dystopian romance,&rdquo; and &ldquo;simulation romance books.&rdquo; Add Sponsored Display on the ASINs for Signal Lost and The Tether Protocol. Review ACoS at day 14. Pause non-converting keywords. Scale what converts. Benchmark: The Tether Protocol at $441 a month with 21 reviews.</div>
+    </div>
+  </div>
+  <div class="step step-teal">
+    <div class="step-num num-teal">6</div>
+    <div>
+      <div class="step-t">Build A+ Content and plan the next title in the series</div>
+      <div class="step-b">Create A+ Content in Author Central using the cover and series branding. Then begin planning Book Two. A series continuation captures reader loyalty at peak engagement and compounds monthly revenue without starting from zero. Authors with two titles in the same niche consistently outperform single-title authors at equivalent review counts.</div>
+    </div>
+  </div>
+</div>
+
+<!-- READERBULL ASSESSMENT -->
+<div class="sec-label">Readerbull Assessment</div>
+<div class="card mb">
+  <p style="font-size:13px;color:var(--mid);line-height:1.85;">Dark sci fi romance generates over $81,000 every month across 14 books on Amazon. Signal Lost earns $3,058 a month with 82 reviews. The Tether Protocol earns $441 a month with 21 reviews. The 2 reviews and 5.0 stars on this listing confirm the book delivers. Category placement and an ad campaign are what separate a $5 month from a $441 month.</p>
+  <p style="font-size:13px;color:var(--mid);line-height:1.85;margin-top:12px;">Correct the categories and update keywords this week. Build to 15 reviews via ARC outreach, then launch Sponsored Products for the $14.99 paperback. The 90-day target is $441 a month. The 12-month target is $6,583 a month.</p>
+</div>
+
+<!-- NOTE FROM JORDAN -->
+<div style="margin:0 24px 32px;background:#0d2137;border-radius:8px;padding:20px 24px;border:1px solid rgba(0,181,173,.15);">
+  <p style="font-size:13px;color:rgba(255,255,255,.85);line-height:1.75;margin:0 0 12px;"><span style="color:var(--teal);font-weight:700;">Note from Jordan:</span> I would welcome the opportunity to support you on your publishing journey.</p>
+  <p style="font-size:13px;color:rgba(255,255,255,.75);line-height:1.75;margin:0 0 12px;">Whether you are looking for free coaching support or a managed service, I can help you with sponsored ad campaigns, editing, formatting, or cover design and more.</p>
+  <p style="font-size:13px;color:rgba(255,255,255,.75);line-height:1.75;margin:0;">Please feel free to send me a direct message if you&rsquo;d like to explore further.</p>
+</div>
+
+</div>
+</div>
+
+<div class="ftr">Readerbull Book Audit &nbsp;&middot;&nbsp; Beyond the Simulation &nbsp;&middot;&nbsp; June 2026</div>
+
+<script>
+function toggleSidebar(){var sb=document.getElementById('sidebar'),ov=document.getElementById('mob-overlay');sb.classList.toggle('open');ov.classList.toggle('open');}
+document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.sb-nav a').forEach(function(l){l.addEventListener('click',function(){if(window.innerWidth<=768)toggleSidebar();});});});
+function filterTable(tbodyId,countId,query){var tbody=document.getElementById(tbodyId),countEl=document.getElementById(countId),rows=tbody.querySelectorAll('tr'),q=query.toLowerCase(),visible=0;rows.forEach(function(row){var text=row.querySelector('.kw-word').textContent.toLowerCase(),show=text.indexOf(q)!==-1;row.style.display=show?'':'none';if(show)visible++;});countEl.textContent=visible;}
+document.addEventListener('click',function(e){if(e.target.classList.contains('kw-add')&&e.target.textContent==='+ Add'){e.target.textContent='&#10003; Added';e.target.style.background='var(--teal-l)';e.target.style.color='var(--teal-d)';e.target.style.borderColor='var(--teal)';}});
+(function(){
+  var btn=document.querySelector('.scroll-top');
+  window.addEventListener('scroll',function(){btn.classList.toggle('visible',window.scrollY>400);});
+  var nav=document.querySelector('nav.sb-nav');
+  if(!nav)return;
+  var navLinks=Array.from(nav.querySelectorAll('a[href^="#"]:not(.act)'));
+  var sectionIds=navLinks.map(function(a){return a.getAttribute('href').slice(1);}).filter(Boolean);
+  var domOrderIds=sectionIds.filter(function(id){return document.getElementById(id);});
+  domOrderIds.sort(function(a,b){return document.getElementById(a).offsetTop-document.getElementById(b).offsetTop;});
+  function getActiveId(){var scrollY=window.scrollY+150,active=domOrderIds[0];domOrderIds.forEach(function(id){var el=document.getElementById(id);if(el&&el.getBoundingClientRect().top+window.scrollY<=scrollY)active=id;});return active;}
+  function setActive(id){navLinks.forEach(function(a){a.classList.remove('active');});var al=nav.querySelector('a[href="#'+id+'"]');if(al)al.classList.add('active');}
+  document.addEventListener('DOMContentLoaded',function(){setActive(getActiveId());});
+  var ticking=false;
+  window.addEventListener('scroll',function(){if(!ticking){window.requestAnimationFrame(function(){setActive(getActiveId());ticking=false;});ticking=true;}});
+})();
+</script>
+</body>
+</html>
